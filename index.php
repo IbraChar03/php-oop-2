@@ -4,6 +4,7 @@ class Product
 
     private $price;
     private $expDate;
+
     public function __construct($price, $expDate)
     {
 
@@ -42,16 +43,39 @@ class Category extends Product
 {
     private $categoryName;
     private Type $nameType;
+    private $discount;
     public function __construct(Type $nameType, $categoryName, $price, $expDate)
     {
         $this->setCategoryName($categoryName);
         parent::__construct($price, $expDate);
         $this->setNameType($nameType);
+        $this->getDiscount();
 
     }
     public function setCategoryName($categoryName)
     {
         $this->categoryName = $categoryName;
+    }
+    public function setDiscount($discount)
+    {
+        date_default_timezone_set('Europe/Warsaw');
+        $from = strtotime($this->getExpDate());
+        $today = time();
+        $difference = $today - $from;
+        $differenceDays = floor($difference / 86400);
+        $this->discount = $discount;
+        if ($differenceDays < 7) {
+            $this->discount = 30;
+
+        } else {
+            $this->discount = 0;
+        }
+
+    }
+    public function getDiscount()
+    {
+        return $this->discount;
+
     }
     public function getCategoryName()
     {
@@ -68,7 +92,7 @@ class Category extends Product
 
     public function getHtml()
     {
-        return "<h1>" . $this->getNameType() . "(" . $this->getCategoryName() . ")" . " " . "Price : " . $this->getHtmlPrice() . " " . $this->getExpDate() . "</h1>";
+        return "<h1>" . $this->getNameType() . "(" . $this->getCategoryName() . ")" . " " . "Price : " . $this->getHtmlPrice() . " " . $this->getExpDate() . $this->getDiscount() . "</h1>";
     }
 
 }
@@ -90,7 +114,7 @@ class Type
     }
 }
 $type1 = new Type("cuccia");
-$product1 = new Category($type1, "gatto", 2.40, null);
+$product1 = new Category($type1, "gatto", 2.40, "2023-01-23");
 echo $product1->getHtml();
 
 
