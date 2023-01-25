@@ -3,10 +3,12 @@ class Product
 {
 
     private $price;
-    public function __construct($price)
+    private $expDate;
+    public function __construct($price, $expDate)
     {
 
         $this->setPrice($price);
+        $this->setExpDate($expDate);
     }
 
     public function setPrice($price)
@@ -14,13 +16,24 @@ class Product
         $this->price = $price;
 
     }
+    public function setExpDate($expDate)
+    {
+        $this->expDate = $expDate;
+
+    }
+    public function getExpDate()
+    {
+        return $this->expDate;
+
+    }
+
     public function getPrice()
     {
         return $this->price;
     }
     public function getHtmlPrice()
     {
-        return "<h2>" . $this->price . "</h2>";
+        return $this->price;
     }
 
 }
@@ -29,10 +42,10 @@ class Category extends Product
 {
     private $categoryName;
     private Type $nameType;
-    public function __construct(Type $nameType, $categoryName, $price)
+    public function __construct(Type $nameType, $categoryName, $price, $expDate)
     {
         $this->setCategoryName($categoryName);
-        parent::__construct($price);
+        parent::__construct($price, $expDate);
         $this->setNameType($nameType);
 
     }
@@ -50,12 +63,12 @@ class Category extends Product
     }
     public function getNameType()
     {
-        return $this->nameType;
+        return $this->nameType->getName();
     }
 
     public function getHtml()
     {
-        return "<h1>" . $this->setNameType() . "(" . $this->setCategoryName() . ")" . " " . "Price : " . $this->getHtmlPrice() . "</h1>";
+        return "<h1>" . $this->getNameType() . "(" . $this->getCategoryName() . ")" . " " . "Price : " . $this->getHtmlPrice() . " " . $this->getExpDate() . "</h1>";
     }
 
 }
@@ -77,5 +90,13 @@ class Type
     }
 }
 $type1 = new Type("cuccia");
-$product1 = new Category($type1, "gatto", 2.40);
+$product1 = new Category($type1, "gatto", 2.40, null);
 echo $product1->getHtml();
+
+
+
+// date_default_timezone_set('Europe/Warsaw');
+// $from = strtotime('2023-01-23');
+// $today = time();
+// $difference = $today - $from;
+// echo floor($difference / 86400);
